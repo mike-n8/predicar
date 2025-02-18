@@ -31,7 +31,7 @@ let numeros = []; // Arreglo donde se guardarán los números ingresados
         return suma; // Devolvemos el resultado
         }
 
-        function enviarForm() {
+        function enviarForm(event) {
 
           event.preventDefault();
 
@@ -46,10 +46,7 @@ let numeros = []; // Arreglo donde se guardarán los números ingresados
           if (idUsuario === usuario  && idContra === contraseña) {
             console.log("GOKUUU");
               window.location.href = "login.html";
-          }
-          else if(idUsuario === '' || idContra === ''){ 
-            
-            } else {
+          } else {
             alert("Noooo");
             //console.log("abrazo de gol");
             }

@@ -1,11 +1,14 @@
 let datos = [];
 
-function guardarDato() {
+function guardarDato(event) {
+    event.preventDefault();
     // Obtener el valor del input
     const palabra = document.getElementById('name').value;
+    const secondPala = document.getElementById('apellido').value;
 
         // Guardar el número en el arreglo
         datos.push(palabra);
+        datos.push(secondPala);
         console.log(datos);
 
 }

@@ -8,12 +8,14 @@
 <body>
     <h1>Registrese Correctamente</h1>
 
-    <form action="">
-        <label for="">Nombre</label>    <input type="text" class="data" id="name"><br><br>
-        <label for="">Apellido</label>  <input type="text" class="data" id="apellido"><br><br>
+<div>
+    <form onsubmit="guardarDato(event)">
+        <label for="">Nombre</label>    <input type="text" class="data" id="name" required><br><br>
+        <label for="">Apellido</label>  <input type="text" class="data" id="apellido" required><br><br>
         <label for="">Imagen</label>    <input type="file" id="imagen"> <br><br>
-        <button type="button" onclick="guardarDato()">Resultados</button>
+        <button type="submit">Resultados</button>
     </form>
+</div>
     
 </body>
 <script src="register.js"></script>
