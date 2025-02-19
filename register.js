@@ -1,26 +1,50 @@
-let datos = [];
+let listaPersonas = JSON.parse(localStorage.getItem("personas")) || [];
+let objetoPersona = {};
 
 function guardarDato(event) {
     event.preventDefault();
     // Obtener el valor del input
-    const palabra = document.getElementById('name').value;
-    const secondPala = document.getElementById('apellido').value;
+    const palabraNombre = document.getElementById('name').value;
+    const secondPalaApellido = document.getElementById('apellido').value;
+    //const imagen = document.getElementById('imagen').value;
+    const codigophoto = document.getElementById("preview").src;
+
+    objetoPersona.nombre= palabraNombre;
+    objetoPersona.apellido= secondPalaApellido;
+    objetoPersona.codigophoto= codigophoto;
 
         // Guardar el número en el arreglo
-        datos.push(palabra);
-        datos.push(secondPala);
-        console.log(datos);
+        listaPersonas.push(objetoPersona);
+        console.log(listaPersonas);
+        localStorage.setItem("personas", JSON.stringify(listaPersonas));
+        window.location.href = "login.html";
 
 }
 
-function datazo(datos) {
+/*function datazo(listaPersonas) {
     let suma = 0;
 
-  for (let i = 0; i < datos.length; i++) {
-  suma += (datos[i]);
+  for (let i = 0; i < listaPersonas.length; i++) {
+  suma += (listaPersonas[i]);
   }
 
   alert("La media del numero es: " + suma);
 
   return suma; // Devolvemos el resultado
-  }
+  }*/
+
+
+
+
+  document.getElementById("photoInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById("preview").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+
+function volver(){
+    window.location.href = "login.html";
+}

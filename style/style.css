@@ -1,0 +1,30 @@
+table {
+    width: 60%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+h2 {
+    text-align: center;
+}
+
+#registro {
+    width: 1000px;
+    height: 100px;
+    color: blue;
+    border-color: black;
+    font-size: 80px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}

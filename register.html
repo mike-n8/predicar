@@ -9,12 +9,15 @@
     <h1>Registrese Correctamente</h1>
 
 <div>
-    <form onsubmit="guardarDato(event)">
+    <form id="registerForm" onsubmit="guardarDato(event)">
         <label for="">Nombre</label>    <input type="text" class="data" id="name" required><br><br>
         <label for="">Apellido</label>  <input type="text" class="data" id="apellido" required><br><br>
-        <label for="">Imagen</label>    <input type="file" id="imagen"> <br><br>
-        <button type="submit">Resultados</button>
+        <!--<label for="">Imagen</label>    <input type="file" id="imagen"> <br><br>!-->
+        <input type="file" id="photoInput" accept="image/*" required>
+        <img id="preview" src="" width="100px"> <br>
+        <button type="submit">Guardar</button>
     </form>
+    <button onclick="volver()">Volver</button>
 </div>
     
 </body>
