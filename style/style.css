@@ -20,11 +20,28 @@ h2 {
     text-align: center;
 }
 
-#registro {
+#registro, #cerrarSesion, #lugar {
     width: 1000px;
     height: 100px;
     color: blue;
     border-color: black;
     font-size: 80px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.suggestion {
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+.suggestion:hover {
+    background-color: #eee;
+}
+.autocomplete-suggestions {
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    background: white;
+    width: 200px;
+    z-index: 1000; /* Asegúrate de que las sugerencias estén por encima de otros elementos */
 }

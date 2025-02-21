@@ -33,16 +33,18 @@ for (let i = 0; i < usuariosGuardados.length; i++) {
     gallery.appendChild(img); // otra opción document.getElementById('gallery').appendChild(img);
 }
 
-document.querySelectorAll('.preview').forEach(function(element) {
-    element.addEventListener('click', function(event) {
-        console.log("El elemento que disparó el evento es: ", event.target);
-        // Recupera la información del localStorage
-        let info = usuariosGuardados;
-        let conductores = document.querySelectorAll(".conductores");
-        // Itera sobre cada elemento de la lista de nodos y actualiza su contenido
-        conductores.forEach(function(conductorAsignado) {
-            conductorAsignado.innerText = info;
+    document.querySelectorAll('.preview').forEach(function(element) {
+        element.addEventListener('click', function(event) {
+            console.log("El elemento que disparó el evento es: ", event.target);
+            console.log("usuario: ", event.target.getAttribute('info'));
+            const info = event.target.getAttribute('info');
+                window.opener.volverAlTd(info);// Asegurar que `window.opener` existe y está abierto
+                window.close(); // Cerrar el popup
+                // Notificar a la otra página
+                //localStorage.setItem("actualizacionConductores", Date.now());
+            
         });
-        window.close();
     });
-});
+
+    
+

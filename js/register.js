@@ -21,21 +21,6 @@ function guardarDato(event) {
 
 }
 
-/*function datazo(listaPersonas) {
-    let suma = 0;
-
-  for (let i = 0; i < listaPersonas.length; i++) {
-  suma += (listaPersonas[i]);
-  }
-
-  alert("La media del numero es: " + suma);
-
-  return suma; // Devolvemos el resultado
-  }*/
-
-
-
-
   document.getElementById("photoInput").addEventListener("change", function(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
