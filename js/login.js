@@ -1,3 +1,47 @@
+let listaPrograma = JSON.parse(localStorage.getItem("programa")) || [];
+if(listaPrograma.length === 0){
+  for (let i = 0; i < 18; i++) {
+    let objetoPrograma = {
+      id: i,
+      dia:"",
+      fecha:"",
+      hora:"",
+      lugar:"",
+      conductor:"",
+      territorio:"",
+      grupo:""
+    };
+    listaPrograma.push(objetoPrograma);
+  }
+  localStorage.setItem("programa", JSON.stringify(listaPrograma));
+}
+
+function guardarHora(td) {  // td ES LA FILA 
+  window.tdSeleccionadoHora = td; // Guardar referencia del TD
+}
+function guardarLugar(td) {
+  window.tdSeleccionadoLugar = td;
+}
+
+// Seleccionamos todos los inputs de tipo time
+const inputsHora = document.querySelectorAll(".hora");
+const inputsLugar = document.querySelectorAll(".lugares");
+
+// Agregamos un evento 'change' a cada input
+inputsHora.forEach(input => {
+  input.addEventListener("change", (event) => {
+    let horaSeleccionada = event.target.value;
+    let idTrSeleccionado = tdSeleccionadoHora.closest('tr').id;
+
+    const programa = JSON.parse(localStorage.getItem("programa"));
+    let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));// ID DE LA FILA( ID DE LA SALIDA)
+    programa[index].hora = horaSeleccionada;
+    localStorage.setItem("programa", JSON.stringify(programa));
+    //programa[index] = {...listaPrograma[index], ...nuevoObjeto};
+  });
+});
+
+
 function agregarFechas() {
     const tbody = document.querySelector("#dataTable tbody");
     const rows = tbody.querySelectorAll("tr");
@@ -48,8 +92,6 @@ document.querySelectorAll(`td:not(.conductores, .hora, .dia)`).forEach(cell => {
       suggestionsContainer.innerHTML = "";
       suggestionsContainer.style.display = "none";
 
-      // Lista de calles
-      //const calles = ["Avenida Siempre Viva", "Calle Falsa 123", "Gran Vía", "Paseo de la Reforma", "Avenida Corrientes", "Calle Mayor", "Las Ramblas"];
       const lugaresGuardados = JSON.parse(localStorage.getItem("direccion"));
 
       input.addEventListener("input", () => {
