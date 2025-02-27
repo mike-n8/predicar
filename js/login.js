@@ -16,30 +16,69 @@ if(listaPrograma.length === 0){
   localStorage.setItem("programa", JSON.stringify(listaPrograma));
 }
 
-function guardarHora(td) {  // td ES LA FILA 
+function guardarHora(td) {  
   window.tdSeleccionadoHora = td; // Guardar referencia del TD
 }
+
 function guardarLugar(td) {
-  window.tdSeleccionadoLugar = td;
+  window.tdSeleccionadoLugar = td; // Guardar referencia del TD
 }
 
-// Seleccionamos todos los inputs de tipo time
-const inputsHora = document.querySelectorAll(".hora");
-const inputsLugar = document.querySelectorAll(".lugares");
+function guardarTerritorio(td) {
+  window.tdSeleccionadoTerritorio = td;
+}
 
-// Agregamos un evento 'change' a cada input
+// Seleccionamos todos los inputs de tipo time y number
+const inputsHora = document.querySelectorAll(".hora");
+const inputTerri = document.querySelectorAll(".territorio");
+
+// Agregamos un evento 'change' a cada input de hora
 inputsHora.forEach(input => {
   input.addEventListener("change", (event) => {
     let horaSeleccionada = event.target.value;
     let idTrSeleccionado = tdSeleccionadoHora.closest('tr').id;
 
     const programa = JSON.parse(localStorage.getItem("programa"));
-    let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));// ID DE LA FILA( ID DE LA SALIDA)
+    let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));
     programa[index].hora = horaSeleccionada;
     localStorage.setItem("programa", JSON.stringify(programa));
-    //programa[index] = {...listaPrograma[index], ...nuevoObjeto};
   });
 });
+
+// Agregamos un evento 'change' a cada input de territorio
+inputTerri.forEach(input => {
+  input.addEventListener("change", (event) => {
+    let territorioSeleccionado = event.target.value;
+    let idTrSeleccionado = tdSeleccionadoTerritorio.closest('tr').id;
+
+    const programa = JSON.parse(localStorage.getItem("programa"));
+    let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));
+    if (index !== -1) {
+      programa[index].territorio = territorioSeleccionado;
+      localStorage.setItem("programa", JSON.stringify(programa));
+    }
+  });
+});
+
+// Evento para los inputs dentro de los <td class="lugares">
+document.addEventListener("input", (event) => {
+  if (event.target.classList.contains("input-lugar")) { // Detectar cambios en inputs dentro de .lugares
+    let lugarSeleccionado = event.target.value;
+    let idTrSeleccionado = tdSeleccionadoLugar.closest('tr').id; // Obtener ID del <tr>
+
+    const programa = JSON.parse(localStorage.getItem("programa"));
+    if (programa && Array.isArray(programa)) {
+      let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));
+      if (index !== -1) {
+        programa[index].lugar = lugarSeleccionado; // Solo lo actualizas si el índice es válido
+        localStorage.setItem("programa", JSON.stringify(programa));
+      }
+    }
+  }
+});
+
+
+//Los input para las salidas de predicar
 
 
 function agregarFechas() {
@@ -72,11 +111,16 @@ agregarFechas();
 
 
 // Función para manejar la edición de celdas
-document.querySelectorAll(`td:not(.conductores, .hora, .dia)`).forEach(cell => {
+document.querySelectorAll(`td:not(.conductores, .hora, .dia, .territorio)`).forEach(cell => {
   cell.addEventListener('click', function () {
     let currentText = this.innerText;
     let input = document.createElement('input');
     input.value = currentText;
+
+    // Si la celda es de tipo "lugares", agregamos la clase
+    if (this.classList.contains("lugares")) {
+      input.classList.add("input-lugar");
+    }
 
     // Reemplazar la celda por el input
     this.innerHTML = '';
@@ -92,10 +136,11 @@ document.querySelectorAll(`td:not(.conductores, .hora, .dia)`).forEach(cell => {
       suggestionsContainer.innerHTML = "";
       suggestionsContainer.style.display = "none";
 
-      const lugaresGuardados = JSON.parse(localStorage.getItem("direccion"));
+      const lugaresGuardados = JSON.parse(localStorage.getItem("direccion")) || [];
 
       input.addEventListener("input", () => {
         const query = input.value.toLowerCase();
+        console.log('Consultando sugerencias para: ', query);
         suggestionsContainer.innerHTML = "";
 
         if (query) {
@@ -156,10 +201,14 @@ document.querySelectorAll(`td:not(.conductores, .hora, .dia)`).forEach(cell => {
 });
 
 //INPUT modificar la hora!
-document.querySelectorAll(".hora").forEach(cell => {
+document.querySelectorAll(".hora, .territorio").forEach(cell => {
   let input = document.createElement('input');
-  input.type = 'time';
-
+  if (cell.classList.contains('territorio')) {
+    input.type = 'number';
+  } else {
+    input.type = 'time';
+  }
+ 
   // Reemplazar la celda por el input
   cell.innerHTML = '';
   cell.appendChild(input);
@@ -191,7 +240,19 @@ document.querySelectorAll(".hora").forEach(cell => {
 }
 
 function volverAlTd(info) {
-    if (window.tdSeleccionado) {
-        window.tdSeleccionado.textContent = info; // Insertar el dato en el TD
-    }
+  if (window.tdSeleccionado) {
+      window.tdSeleccionado.textContent = info; // Insertar el dato en el TD
+      let idTrSeleccionado = window.tdSeleccionado.closest('tr').id; // Asignar el id de la fila más cercana a una variable
+      const programa = JSON.parse(localStorage.getItem("programa")) || [];
+
+      // Encuentra el índice del programa correspondiente al idTrSeleccionado
+      let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));
+
+      if (index !== -1) {
+          let conductorSeleccionado = info; // Asumimos que `info` es el conductor seleccionado
+          programa[index].conductor = conductorSeleccionado; // Actualiza el conductor en el programa
+          localStorage.setItem("programa", JSON.stringify(programa)); // Guarda los cambios en localStorage
+      }
+  }
 }
+
