@@ -14,6 +14,13 @@ if(listaPrograma.length === 0){
     listaPrograma.push(objetoPrograma);
   }
   localStorage.setItem("programa", JSON.stringify(listaPrograma));
+} else {
+  for (let i = 0; i < 18; i++) {
+    let tr = document.getElementById(i);
+    let tdHora = tr.querySelector('.hora');
+    let inputHora = tdHora.querySelector('input');
+    inputHora.value = listaPrograma[i].hora;    
+  }
 }
 
 function guardarHora(td) {  
@@ -61,26 +68,24 @@ inputTerri.forEach(input => {
 });
 
 // Evento para los inputs dentro de los <td class="lugares">
-document.addEventListener("input", (event) => {
-  if (event.target.classList.contains("input-lugar")) { // Detectar cambios en inputs dentro de .lugares
-    let lugarSeleccionado = event.target.value;
-    let idTrSeleccionado = tdSeleccionadoLugar.closest('tr').id; // Obtener ID del <tr>
-
-    const programa = JSON.parse(localStorage.getItem("programa"));
-    if (programa && Array.isArray(programa)) {
-      let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));
-      if (index !== -1) {
-        programa[index].lugar = lugarSeleccionado; // Solo lo actualizas si el índice es válido
-        localStorage.setItem("programa", JSON.stringify(programa));
-      }
-    }
-  }
-});
-
-
-//Los input para las salidas de predicar
+//document.addEventListener("input", (event) => {
+//  if (event.target.classList.contains("input-lugar")) { // Detectar cambios en inputs dentro de .lugares
+//    let lugarSeleccionado = event.target.value;
+//    let idTrSeleccionado = tdSeleccionadoLugar.closest('tr').id; // Obtener ID del <tr>
+//
+//    const programa = JSON.parse(localStorage.getItem("programa"));
+//    if (programa && Array.isArray(programa)) {
+//      let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));
+//      if (index !== -1) {
+//        programa[index].lugar = lugarSeleccionado; // Solo lo actualizas si el índice es válido
+//        localStorage.setItem("programa", JSON.stringify(programa));
+//      }
+//    }
+//  }
+//});
 
 
+//Fecha de la columna "Fecha"
 function agregarFechas() {
     const tbody = document.querySelector("#dataTable tbody");
     const rows = tbody.querySelectorAll("tr");
@@ -92,7 +97,7 @@ function agregarFechas() {
         fecha.setDate(fecha.getDate() + 1); // Incrementa la fecha en un día
     });
 }
-
+// ¿Que hace esto?
 function sortTable() {
     const table = document.querySelector("#dataTable tbody");
     const rows = Array.from(table.rows);
@@ -157,6 +162,7 @@ document.querySelectorAll(`td:not(.conductores, .hora, .dia, .territorio)`).forE
 
             div.addEventListener("click", () => {
               input.value = calle;
+              guardarEnLocalStorage(calle);
               this.innerHTML = calle;
               suggestionsContainer.style.display = "none";
               selectingSuggestion = false;
@@ -175,39 +181,28 @@ document.querySelectorAll(`td:not(.conductores, .hora, .dia, .territorio)`).forE
       });
     }
 
-    // Cuando el input pierde el foco
-    input.addEventListener('blur', () => {
-      if (!selectingSuggestion) {
-        this.innerHTML = input.value;
-        if (suggestionsContainer) suggestionsContainer.style.display = "none";
-      }
-    });
+   
+  function guardarEnLocalStorage(valor) {
+    let idTrSeleccionado = tdSeleccionadoLugar.closest('tr').id;
+    const programa = JSON.parse(localStorage.getItem("programa"));
 
-    // Permitir presionar 'Enter' para confirmar el cambio
-    input.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        this.innerHTML = input.value;
-        if (suggestionsContainer) suggestionsContainer.style.display = "none";
+    if (programa && Array.isArray(programa)) {
+      let index = programa.findIndex(prog => prog.id === Number(idTrSeleccionado));
+      if (index !== -1) {
+        programa[index].lugar = valor; // Guarda la opción seleccionada
+        localStorage.setItem("programa", JSON.stringify(programa));
       }
-    });
+    }
+  }
 
-    // Cerrar sugerencias si se hace clic fuera
-    document.addEventListener("click", (event) => {
-      if (!input.contains(event.target) && !suggestionsContainer.contains(event.target)) {
-        if (suggestionsContainer) suggestionsContainer.style.display = "none";
-      }
-    }, { once: true });
+
   });
 });
 
-//INPUT modificar la hora!
-document.querySelectorAll(".hora, .territorio").forEach(cell => {
+//INPUT modificar el territorio!
+document.querySelectorAll(".territorio").forEach(cell => {
   let input = document.createElement('input');
-  if (cell.classList.contains('territorio')) {
-    input.type = 'number';
-  } else {
-    input.type = 'time';
-  }
+  input.type = 'number';
  
   // Reemplazar la celda por el input
   cell.innerHTML = '';
@@ -221,18 +216,6 @@ document.querySelectorAll(".hora, .territorio").forEach(cell => {
   });
 });
 
-
-   // Obtener todas las celdas de la tabla
-   //const tablaCompleta = document.querySelectorAll('.conductores');
-//
-   //// Añadir un evento de click a cada celda
-   //tablaCompleta.forEach(td => {
-   //    td.addEventListener('click', function() {
-   //     window.guardarTd = td;
-   //        // Abrir una ventana al hacer click en una celda
-   //        window.open('archive.html', '_blank', 'width=900,height=800');
-   //    });
-   //});
 
    function abrirPopup(td) {
     window.tdSeleccionado = td; // Guardar referencia del TD
