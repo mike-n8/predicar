@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" href="style/register.css">
+
 </head>
 <body>
     <h1>Registrese Correctamente</h1>
@@ -12,12 +14,30 @@
     <form id="registerForm" onsubmit="guardarDato(event)">
         <label for="">Nombre</label>    <input type="text" class="data" id="name" required><br><br>
         <label for="">Apellido</label>  <input type="text" class="data" id="apellido" required><br><br>
-        <!--<label for="">Imagen</label>    <input type="file" id="imagen"> <br><br>!-->
+        <h3>Disponibilidad</h3>
+        <label for="">Mañana</label> <input type="checkbox" id="mananaInp">
+        <label for="">Tarde</label> <input type="checkbox" id="tardeInp">
+        <label for="">Fin de Semana</label> <input type="checkbox" id="findeInp"> <br><br>
         <input type="file" id="photoInput" accept="image/*" required>
         <img id="preview" src="" width="100px"> <br>
         <button type="submit">Guardar</button>
     </form>
     <button onclick="volver()">Volver</button>
+</div>
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Mañana</th>
+                <th>Tarde</th>
+                <th>Finde</th>
+            </tr>
+            <tbody id="tbodyRegister">
+            </tbody>
+        </thead>
+    </table>
 </div>
     
 </body>

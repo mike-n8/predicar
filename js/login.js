@@ -1,6 +1,6 @@
 let listaPrograma = JSON.parse(localStorage.getItem("programa")) || [];
 if(listaPrograma.length === 0){
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 18; i++) { //Cuando no hay ninguna salida te crea 18 filas vacias.
     let objetoPrograma = {
       id: i,
       dia:"",
@@ -15,11 +15,21 @@ if(listaPrograma.length === 0){
   }
   localStorage.setItem("programa", JSON.stringify(listaPrograma));
 } else {
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < listaPrograma.length; i++) {
+    //HORA
     let tr = document.getElementById(i);
     let tdHora = tr.querySelector('.hora');
     let inputHora = tdHora.querySelector('input');
-    inputHora.value = listaPrograma[i].hora;    
+    inputHora.value = listaPrograma[i].hora;
+    //LUGAR
+    let tdLugar = tr.querySelector('.lugares');
+    tdLugar.textContent = listaPrograma[i].lugar;
+    //CONDUCTORES
+    let tdConductor = tr.querySelector('.conductores');
+    tdConductor.textContent = listaPrograma[i].conductor;
+    //TERRITORIOS
+    let inputTerritorio = tr.querySelector('.territorio').querySelector('.input-terri');
+    inputTerritorio.value = listaPrograma[i].territorio;
   }
 }
 
@@ -200,18 +210,12 @@ document.querySelectorAll(`td:not(.conductores, .hora, .dia, .territorio)`).forE
 });
 
 //INPUT modificar el territorio!
-document.querySelectorAll(".territorio").forEach(cell => {
-  let input = document.createElement('input');
-  input.type = 'number';
- 
-  // Reemplazar la celda por el input
-  cell.innerHTML = '';
-  cell.appendChild(input);
+inputTerriInput = document.querySelectorAll('.input-terri');
 
-  // Añadir un evento para detectar cuando se presiona Enter
-  input.addEventListener('keypress', (event) => {
+inputTerriInput.forEach((territorio) => {
+  territorio.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') {
-      input.blur(); // Eliminar el foco del input
+      territorio.blur(); // Eliminar el foco del input
     }
   });
 });
@@ -219,6 +223,20 @@ document.querySelectorAll(".territorio").forEach(cell => {
 
    function abrirPopup(td) {
     window.tdSeleccionado = td; // Guardar referencia del TD
+    let trSeleccionado = window.tdSeleccionado.closest('tr');
+    let diaSemana = trSeleccionado.querySelector('.dia').textContent;
+    let tdHora = trSeleccionado.querySelector('.hora');
+    let inputHora = tdHora.querySelector('input');
+
+
+
+
+    if( diaSemana === 'Sabado' || diaSemana === 'Domingo' ) {
+
+    } else {
+      
+    }
+
     window.open('archive.html', '_blank', 'width=900,height=800');
 }
 
