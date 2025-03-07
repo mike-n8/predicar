@@ -46,19 +46,9 @@ h2 {
     z-index: 1000; /* Asegúrate de que las sugerencias estén por encima de otros elementos */
 }
 
-/* Eliminar flechas en navegadores WebKit (Chrome, Safari, Edge) */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* Eliminar flechas en Firefox */
-input[type="number"] {
-    appearance: none;
+.input-terri {
     text-align: center;
-    width: 70%;
-    padding: 1px;
+    width: 90%;
 }
 
 .lugares, .conductores, .territorio, .grupos, input {

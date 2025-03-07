@@ -96,37 +96,38 @@ inputTerri.forEach(input => {
 
 
 //Fecha de la columna "Fecha"
-function agregarFechas() {
-    const tbody = document.querySelector("#dataTable tbody");
-    const rows = tbody.querySelectorAll("tr");
-    let fecha = new Date(); // Fecha actual
+  const rows = document.querySelectorAll("tbody tr");
+  const today = new Date();
+  const todayDay = today.getDay(); // Día de la semana actual (0 = Domingo, 1 = Lunes, ...)
 
-    rows.forEach(row => {
-        const cell = row.insertCell(1);
-        cell.textContent = fecha.toISOString().split('T')[0].split('-').reverse().join('-'); // Formato DD-MM-YYYY
-        fecha.setDate(fecha.getDate() + 1); // Incrementa la fecha en un día
-    });
-}
-// ¿Que hace esto?
-function sortTable() {
-    const table = document.querySelector("#dataTable tbody");
-    const rows = Array.from(table.rows);
-    
-    rows.sort((a, b) => {
-        const dateA = new Date(a.cells[3].textContent);
-        const dateB = new Date(b.cells[3].textContent);
-        return dateA - dateB;
-    });
+  // Determinar si estamos en la semana actual o la siguiente
+  let referenceDate = new Date(today);
+  if (todayDay !== 1) { // Si hoy NO es lunes
+      referenceDate.setDate(today.getDate() + (8 - todayDay)); // Ir al próximo lunes
+  } else {
+      referenceDate.setDate(today.getDate()); // Usar este lunes como referencia
+  }
 
-    table.innerHTML = "";
-    rows.forEach(row => table.appendChild(row));
-}
+  rows.forEach(row => {
+      const dayNumber = parseInt(row.querySelector("td[data-day]").dataset.day);
+      const dateInput = row.querySelector(".date-input");
 
-agregarFechas();
+      // Calcular la fecha correcta basada en el lunes de referencia
+      let selectedDate = new Date(referenceDate);
+      selectedDate.setDate(referenceDate.getDate() + (dayNumber - 1)); // Ajustar días
+
+      // Si es domingo, ajustar la fecha según la condición dada
+      if (dayNumber === 0) {
+          selectedDate.setDate(selectedDate.getDate() + (todayDay === 1 ? 14 : 7));
+      }
+
+      // Establecer la fecha en formato ISO (YYYY-MM-DD)
+      dateInput.value = selectedDate.toISOString().split("T")[0];
+  });
 
 
 // Función para manejar la edición de celdas
-document.querySelectorAll(`td:not(.conductores, .hora, .dia, .territorio)`).forEach(cell => {
+document.querySelectorAll(".grupos, .lugares").forEach(cell => {
   cell.addEventListener('click', function () {
     let currentText = this.innerText;
     let input = document.createElement('input');
@@ -210,12 +211,21 @@ document.querySelectorAll(`td:not(.conductores, .hora, .dia, .territorio)`).forE
 });
 
 //INPUT modificar el territorio!
-inputTerriInput = document.querySelectorAll('.input-terri');
+let inputTerriInput = document.querySelectorAll('.input-terri');
 
-inputTerriInput.forEach((territorio) => {
-  territorio.addEventListener('keypress', (event) => {
+const allowedKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']; // Teclas permitidas
+
+// Recorre la NodeList y añade el event listener a cada input
+inputTerriInput.forEach((input) => {
+  input.addEventListener('keydown', (event) => {
+    // Validar teclas permitidas
+    if (!allowedKeys.includes(event.key) && event.key !== "Backspace" && event.key !== "Tab") {
+      event.preventDefault(); // Evita que teclas no permitidas se escriban
+    }
+
+    // Quitar foco si presionan Enter
     if (event.key === 'Enter') {
-      territorio.blur(); // Eliminar el foco del input
+      input.blur();
     }
   });
 });
@@ -223,21 +233,14 @@ inputTerriInput.forEach((territorio) => {
 
    function abrirPopup(td) {
     window.tdSeleccionado = td; // Guardar referencia del TD
-    let trSeleccionado = window.tdSeleccionado.closest('tr');
-    let diaSemana = trSeleccionado.querySelector('.dia').textContent;
-    let tdHora = trSeleccionado.querySelector('.hora');
-    let inputHora = tdHora.querySelector('input');
+    let tr = td.closest('tr');
+    let diaSemana = tr.querySelector('.dia').textContent;
+    let tdHora = tr.querySelector('.hora');
+    let inputHora = tdHora.querySelector('input').value;
+    let hora= parseInt(inputHora.split(":")[0]);
 
 
-
-
-    if( diaSemana === 'Sabado' || diaSemana === 'Domingo' ) {
-
-    } else {
-      
-    }
-
-    window.open('archive.html', '_blank', 'width=900,height=800');
+    window.open('archive.html?diaSemana=' + encodeURIComponent(diaSemana) + '&hora=' + encodeURIComponent(hora), '_blank', 'width=900,height=800');
 }
 
 function volverAlTd(info) {

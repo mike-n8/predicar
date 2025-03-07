@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario para la próxima semana</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Día</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td data-day="1">Lunes</td>
+                <td><input type="date" class="date-input"></td>
+            </tr>
+            <tr>
+                <td data-day="2">Martes</td>
+                <td><input type="date" class="date-input"></td>
+            </tr>
+            <tr>
+                <td data-day="3">Miércoles</td>
+                <td><input type="date" class="date-input"></td>
+            </tr>
+            <tr>
+                <td data-day="4">Jueves</td>
+                <td><input type="date" class="date-input"></td>
+            </tr>
+            <tr>
+                <td data-day="5">Viernes</td>
+                <td><input type="date" class="date-input"></td>
+            </tr>
+            <tr>
+                <td data-day="6">Sábado</td>
+                <td><input type="date" class="date-input"></td>
+            </tr>
+            <tr>
+                <td data-day="0">Domingo</td>
+                <td><input type="date" class="date-input"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const rows = document.querySelectorAll("tbody tr");
+            const today = new Date();
+            const todayDay = today.getDay(); // Día de la semana actual (0 = Domingo, 1 = Lunes, ...)
+
+            // Determinar si estamos en la semana actual o la siguiente
+            let referenceDate = new Date(today);
+            if (todayDay !== 1) { // Si hoy NO es lunes
+                referenceDate.setDate(today.getDate() + (8 - todayDay)); // Ir al próximo lunes
+            } else {
+                referenceDate.setDate(today.getDate()); // Usar este lunes como referencia
+            }
+
+            rows.forEach(row => {
+                const dayNumber = parseInt(row.querySelector("td[data-day]").dataset.day);
+                const dateInput = row.querySelector(".date-input");
+
+                // Calcular la fecha correcta basada en el lunes de referencia
+                let selectedDate = new Date(referenceDate);
+                selectedDate.setDate(referenceDate.getDate() + (dayNumber - 1)); // Ajustar días
+
+                // Si es domingo, ajustar la fecha según la condición dada
+                if (dayNumber === 0) {
+                    selectedDate.setDate(selectedDate.getDate() + (todayDay === 1 ? 14 : 7));
+                }
+
+                // Establecer la fecha en formato ISO (YYYY-MM-DD)
+                dateInput.value = selectedDate.toISOString().split("T")[0];
+            });
+        });
+    </script>
+</body>
+</html>
+

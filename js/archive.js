@@ -21,6 +21,27 @@ const gallery = document.getElementById('gallery');
 });*/
 
 for (let i = 0; i < usuariosGuardados.length; i++) {
+
+    let params = new URLSearchParams(window.location.search);
+    let diaSemana = params.get('diaSemana');
+    let hora = params.get('hora');
+
+
+    if( (diaSemana === 'Sabado' || diaSemana === 'Domingo') && usuariosGuardados[i].finde) {// tiene que coincidir el dia del conductor con el dia de la tabla
+        mostrarImagenes(usuariosGuardados,i);
+    } else {
+      if(hora > 12 && usuariosGuardados[i].tarde){// si el conductor tiene activo el horario de la tarde consulta si coincide con la hora de la tabla
+        mostrarImagenes(usuariosGuardados,i);
+      }
+      if(hora < 12 && usuariosGuardados[i].manana){
+            mostrarImagenes(usuariosGuardados,i);
+        }
+    }
+
+    
+}
+
+function mostrarImagenes(usuariosGuardados,i){
     // Crear un elemento <img>
     const img = document.createElement('img');
     //img.id = `preview-${i}`; // Asignar un id único
